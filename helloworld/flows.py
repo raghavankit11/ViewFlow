@@ -2,8 +2,8 @@ from viewflow import flow
 from viewflow.base import this, Flow
 from viewflow.flow.views import CreateProcessView, UpdateProcessView
 from viewflow import frontend
-
-from .models import HelloWorldProcess, ResponseSubmissionProcess
+from .views import field_response
+from .models import HelloWorldProcess, ResponseSubmissionProcess, AUDIT_PASS, AUDIT_FAIL, APPROVE_PASS, APPROVE_FAIL
 
 
 @frontend.register
@@ -69,7 +69,8 @@ class ResponseSubmissionFlow(Flow):
     )
 
     check_audit = (
-        flow.If(lambda activation: activation.process.is_audited)
+        flow.If(lambda activation:
+                activation.process.is_audited == AUDIT_PASS)
             .Then(this.approve)
             .Else(this.end)
     )
@@ -84,7 +85,7 @@ class ResponseSubmissionFlow(Flow):
     )
 
     check_approve = (
-        flow.If(lambda activation: activation.process.is_approved)
+        flow.If(lambda activation: activation.process.is_approved == APPROVE_PASS)
             .Then(this.send)
             .Else(this.end)
     )

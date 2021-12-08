@@ -17,9 +17,13 @@ from django.contrib import admin
 from django.urls import include, path
 from django.views import generic
 from material.frontend import urls as frontend_urls
+from viewflow.flow.viewset import FlowViewSet
+from helloworld.flows import ResponseSubmissionProcess
 
 urlpatterns = [
     path(r'', generic.RedirectView.as_view(url='/workflow/', permanent=False)),
     path(r'', include(frontend_urls)),
     path('admin/', admin.site.urls),
+    path('helloworld/', include('helloworld.urls')),
+    path('field_response/', admin.site.urls, name='field-response'),
 ]
